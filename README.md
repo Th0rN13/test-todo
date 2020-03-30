@@ -1,4 +1,4 @@
-## Atmel Fuse calculator
+## Users todo
 
-Link: https://ele9i4.github.io/fuse-calc/
+Link: https://th0r.ru/test-todo/
 
