@@ -6,7 +6,7 @@
   function goTodo (id, name) {
     $curUser = name;
     $isLoading = true;
-    goto(`/user/${id}`);
+    goto(`user/${id}`);
   }
 </script>
 
