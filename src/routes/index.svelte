@@ -3,7 +3,7 @@
   export async function preload({params}, session) {
     const page = session.page || 1;
     const { userCount, userList } = await getUserList(page, 5, this.fetch);
-    return { userCount, userList };
+    return { preloadPage: page, userCount, userList };
   }
 </script>
 
@@ -17,21 +17,20 @@
 
   export let userCount;
   export let userList;
+  export let preloadPage;
   let perPage = 5;
   let maxUsers = 10;
-  $isLoading = false;
 
   $: updatePage($session.page);
+  $: $isLoading = (userList, false);
+  $isLoading = false;
 
   async function updatePage () {
-    const page = $session.page
+    const page = $session.page;
+    if (preloadPage === page) return;
+    $isLoading = true;
     if (process.browser) {
-      $isLoading = true;
-      const response = await post('paging', {
-        page,
-      });
-      ({ userList } = await getUserList(page, perPage, fetch));
-      $isLoading = false;
+      await post('paging', { page });
     }
   }
 </script>
