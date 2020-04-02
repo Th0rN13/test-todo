@@ -34,7 +34,7 @@ polka()
     sapper.middleware({
       session: (req) => ({
         page: req.session && req.session.page,
-        apiUrl: apiUrl+serverFolder,
+        apiUrl: apiUrl,
       })
     })
   )
