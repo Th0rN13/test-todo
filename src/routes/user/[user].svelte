@@ -26,5 +26,5 @@
 </AnimPage>
 
 <svelte:head>
-  <title>Todo list</title>
+  <title>Todo list for user: {$curUser}</title>
 </svelte:head>
