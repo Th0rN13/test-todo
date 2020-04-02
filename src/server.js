@@ -8,9 +8,10 @@ import session from 'express-session';
 import sessionFileStore from 'session-file-store';
 
 config();
-const { PORT, NODE_ENV, FOLDER } = process.env;
+const { PORT, NODE_ENV, FOLDER, API_URL } = process.env;
 const serverFolder = FOLDER || '/';
 const serverPORT = PORT || 3000;
+const apiUrl = API_URL || '';
 const dev = NODE_ENV === 'development';
 const FileStore = sessionFileStore(session);
 
@@ -32,7 +33,8 @@ polka()
     sirv('static', { dev }),
     sapper.middleware({
       session: (req) => ({
-        page: req.session && req.session.page
+        page: req.session && req.session.page,
+        apiUrl: apiUrl+serverFolder,
       })
     })
   )

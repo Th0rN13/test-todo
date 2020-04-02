@@ -1,14 +1,15 @@
 <script context="module">
-  import { getUserList, post } from 'helpers/api.js';
-  export async function preload({params}, session) {
+  import { getUserList, post, setApiUrl } from 'helpers/api.js';
+  export async function preload(_, session) {
     const page = session.page || 1;
+    setApiUrl(session.apiUrl);
     const { userCount, userList } = await getUserList(page, 5, this.fetch);
     return { preloadPage: page, userCount, userList };
   }
 </script>
 
 <script>
-  import { curUser, isLoading, pageStore } from 'store/store.js';
+  import { isLoading } from 'store/store.js';
   import AnimPage from 'components/AnimatePage.svelte';
   import UserList from 'components/UserList.svelte';
   import Paging from 'components/Paging.svelte';
@@ -19,7 +20,6 @@
   export let userList;
   export let preloadPage;
   let perPage = 5;
-  let maxUsers = 10;
 
   $: updatePage($session.page);
   $: $isLoading = (userList, false);

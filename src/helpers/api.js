@@ -1,7 +1,11 @@
-const apiUrl = 'http://localhost:3000';
+let apiUrl;
+
+export function setApiUrl(url) {
+  apiUrl = url;
+}
 
 export async function getUserList (curPage, perPage, fetch) {
-  const url = `${apiUrl}/users?_page=${curPage}&_limit=${perPage}`;
+  const url = `${apiUrl}users?_page=${curPage}&_limit=${perPage}`;
   const result = await fetch(url);
   const userCount = result.headers.get('x-total-count');
   const userList = await result.json();
@@ -9,14 +13,14 @@ export async function getUserList (curPage, perPage, fetch) {
 }
 
 export async function getSingleUser (userId, fetch) {
-  const url = `${apiUrl}/users?id=${userId}`;
+  const url = `${apiUrl}users?id=${userId}`;
   const result = await fetch(url);
   const user = await result.json();
   return user[0];
 }
 
 export async function getTodoList (userId, fetch) {
-  const url = `${apiUrl}/todos?userId=${userId}`;
+  const url = `${apiUrl}todos?userId=${userId}`;
   return await fetch(url).then(r => r.json());
 }
 
