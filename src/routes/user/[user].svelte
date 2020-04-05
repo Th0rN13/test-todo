@@ -1,11 +1,10 @@
 <script context="module">
-  import { getTodoList, getSingleUser, setApiUrl } from 'helpers/api.js';
+  import { getTodoList, getSingleUser } from 'helpers/api.js';
   export async function preload({params}, session) {
     const userId = params.user;
-    setApiUrl(session.apiUrl);
     const [todoList, {name}] = await Promise.all([
-      getTodoList(userId, this.fetch),
-      (process.browser) ? { name: '' } : getSingleUser(userId, this.fetch)
+      getTodoList(userId, this),
+      (process.browser) ? { name: '' } : getSingleUser(userId, this),
     ]);
     return { todoList, name };
   }

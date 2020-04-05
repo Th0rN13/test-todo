@@ -1,9 +1,8 @@
 <script context="module">
-  import { getUserList, post, setApiUrl } from 'helpers/api.js';
+  import { getUserList, post } from 'helpers/api.js';
   export async function preload(_, session) {
     const page = session.page || 1;
-    setApiUrl(session.apiUrl);
-    const { userCount, userList } = await getUserList(page, 5, this.fetch);
+    const { userCount, userList } = await getUserList({curPage: page, perPage: 5}, this);
     return { preloadPage: page, userCount, userList };
   }
 </script>

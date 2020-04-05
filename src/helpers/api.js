@@ -1,27 +1,42 @@
-let apiUrl;
+import wretch from 'wretch';
 
-export function setApiUrl(url) {
-  apiUrl = url;
+export function getApi(url, opts) {
+  const endpoint = wretch(url, {
+    ...opts,
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  return ({ fetch, error } = {}) => {
+    return endpoint
+      .polyfills({ fetch });
+  };
 }
 
-export async function getUserList (curPage, perPage, fetch) {
-  const url = `${apiUrl}users?_page=${curPage}&_limit=${perPage}`;
-  const result = await fetch(url);
-  const userCount = result.headers.get('x-total-count');
-  const userList = await result.json();
-  return { userCount, userList };
+const externalApi = (endpoint) => getApi(`APP_API_URL${endpoint}`);
+const users = externalApi('/users');
+const todos = externalApi('/todos');
+
+export async function getUserList({curPage, perPage}, ctx) {
+  return await users(ctx).url(`?_page=${curPage}&_limit=${perPage}`)
+    .get()
+    .setTimeout(1000)
+    .res(async (response) => {
+      return {
+        userCount: response.headers.get('x-total-count'),
+        userList: await response.json(),
+      }
+    });
 }
 
-export async function getSingleUser (userId, fetch) {
-  const url = `${apiUrl}users?id=${userId}`;
-  const result = await fetch(url);
-  const user = await result.json();
-  return user[0];
+export async function getSingleUser (userId, ctx) {
+  const result = await users(ctx).url(`?id=${userId}`).get().json();
+  return result[0];
 }
 
-export async function getTodoList (userId, fetch) {
-  const url = `${apiUrl}todos?userId=${userId}`;
-  return await fetch(url).then(r => r.json());
+export async function getTodoList (userId, ctx) {
+  return todos(ctx).url(`?userId=${userId}`).get().json();
 }
 
 export const fetchOptions = {
